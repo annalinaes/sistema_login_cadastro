@@ -1,16 +1,16 @@
 <?php 
 session_start();
 
-if(!isset($_SESSION['email'])){
+if(!isset($_SESSION['nome'])){
     header("Location: index.php");
     exit();
 }
 
-$email = $_SESSION['email'];
+$nome = $_SESSION['nome'];
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@ $email = $_SESSION['email'];
 </head>
 <body>
     <h1>Painel de controle</h1>
-    <p>Seja bem vindo(a) <?php echo $email; ?> </p>
+    <p>Seja bem vindo(a)! <?php echo $nome; ?> </p>
 
     <a href="logout.php">Sair</a>
     

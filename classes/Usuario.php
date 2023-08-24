@@ -15,6 +15,12 @@ class Usuario{
         if($senha === $confSenha){
 
 
+            $nomeExistente = $this->verificarNomeExistente($nome);
+            if($nomeExistente){
+                print "<script> alert('Nome ja cadastrado')</script>";
+                return false;
+            }
+
             $emailExistente = $this->verificarEmailExistente($email);
             if($emailExistente){
                 print "<script> alert('Email ja cadastrado')</script>";
@@ -23,7 +29,7 @@ class Usuario{
 
         $senhaCriptografada = password_hash($senha, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO usuarios (nome_usuario,email,senha) VALUES (?,?,?)";
+        $sql = "INSERT INTO usuarios (nome,email,senha) VALUES (?,?,?)";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(1,$nome);
@@ -38,6 +44,16 @@ class Usuario{
         }
 
         }
+    private function verificarNomeExistente($nome){
+        $sql = "SELECT COUNT(*) FROM usuarios WHERE nome = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(1,$nome);
+        $stmt->execute();
+
+        return $stmt->fetchColumn() > 0;
+
+    }
+
     private function verificarEmailExistente($email){
         $sql = "SELECT COUNT(*) FROM usuarios WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
@@ -48,10 +64,10 @@ class Usuario{
 
     }
 
-    public function logar($email, $senha){
-        $sql = "SELECT * FROM usuarios WHERE email = :email";
+    public function logar($nome, $senha){
+        $sql = "SELECT * FROM usuarios WHERE nome = :nome";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':email',$email);
+        $stmt->bindValue(':nome',$nome);
         $stmt->execute();
 
         if($stmt->rowCount()== 1){
